@@ -12,7 +12,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class SmsBroadcastReceiver extends BroadcastReceiver {
-    private static final String LOG_TAG = "ForwardSMSService";
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
@@ -20,24 +19,26 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
 
             Log.i("sms", "on receive," + intent.getAction());
 
+            String number = context.getSharedPreferences("data", Context.MODE_PRIVATE).getString("number", "");
+            if (number == "") {
+                Log.i(Constants.LOG_TAG, "phone number not set. ignore this one.");
+                return;
+            }
+
             for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
 
                 String messageBody = smsMessage.getMessageBody();
                 String emailFrom = smsMessage.getEmailFrom();
                 String address = smsMessage.getOriginatingAddress();
-                Log.i(LOG_TAG, "body: " + messageBody);
-                Log.i(LOG_TAG, "address: " + address);
+                Log.i(Constants.LOG_TAG, "body: " + messageBody);
+                Log.i(Constants.LOG_TAG, "address: " + address);
 
                 String message = "[" + address + "] " + messageBody;
 
-                String number = context.getSharedPreferences("data", Context.MODE_PRIVATE).getString("number", "");
-                if (number == "") {
-                    Log.i("sms", "phone number not set. ignore this one.");
-                    return;
-                }
-                Log.i(LOG_TAG, "sending to " + number);
 
-                Log.i(LOG_TAG, "message send:" + message);
+                Log.i(Constants.LOG_TAG, "sending to " + number);
+
+                Log.i(Constants.LOG_TAG, "message send:" + message);
                 SmsManager sms = SmsManager.getDefault();
                 ArrayList<String> dividedMessages = sms.divideMessage(message);
                 sms.sendMultipartTextMessage(number, null, dividedMessages, null, null);

@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.ArrayList;
 
 public class ForwardSMSService extends Service {
-    private static final String LOG_TAG = "ForwardSMSService";
 
     private static final String SMS_INBOX_URI = "content://sms/inbox";
 //    private static Uri uriSMS = Uri.parse("content://mms-sms/conversations/");
@@ -42,7 +41,7 @@ public class ForwardSMSService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.getAction().equals(Constants.ACTION.STARTFOREGROUND_ACTION)) {
-            Log.i(LOG_TAG, "Received Start Foreground Intent ");
+            Log.i(Constants.LOG_TAG, "Received Start Foreground Intent ");
 
             Intent notificationIntent = new Intent(this, MainActivity.class);
             notificationIntent.setAction(Constants.ACTION.MAIN_ACTION);
@@ -64,7 +63,7 @@ public class ForwardSMSService extends Service {
                     .build();
             startForeground(Constants.NOTIFICATION_ID.FOREGROUND_SERVICE, notification);
         } else if (intent.getAction().equals(Constants.ACTION.STOPFOREGROUND_ACTION)) {
-            Log.i(LOG_TAG, "Received Stop Foreground Intent");
+            Log.i(Constants.LOG_TAG, "Received Stop Foreground Intent");
             stopForeground(true);
             stopSelf();
         }

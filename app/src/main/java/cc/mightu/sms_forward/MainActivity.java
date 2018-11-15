@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(cc.mightu.sms_forward.R.layout.activity_main);
 
         String number = getSharedPreferences("data", Context.MODE_PRIVATE).getString("number", "");
-        Log.d("log", "number: " + number);
+        Log.d(Constants.LOG_TAG, "number: " + number);
         EditText editText = (EditText) findViewById(cc.mightu.sms_forward.R.id.edit_phone_number);
         editText.setText(number, TextView.BufferType.EDITABLE);
 
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
 
         String message = "This is a test message to " + number;
-        Log.i("sms", "message send:" + message);
+        Log.i(Constants.LOG_TAG, "message send:" + message);
 
 //        SmsManager smsManager = SmsManager.getDefault();
 //        smsManager.sendTextMessage(number, null, message, null, null);

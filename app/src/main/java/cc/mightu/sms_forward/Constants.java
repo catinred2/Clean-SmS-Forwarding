@@ -13,4 +13,5 @@ public class Constants {
     public interface NOTIFICATION_ID {
         public static int FOREGROUND_SERVICE = 101;
     }
+    public static final String LOG_TAG = "ForwardSMSService";
 }
