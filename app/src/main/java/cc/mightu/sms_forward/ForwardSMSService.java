@@ -39,40 +39,6 @@ public class ForwardSMSService extends Service {
 
     private long mReceivedMsgDate = 0;
 
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if(Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(action)){
-                Log.i("sms", "on receive," + intent.getAction());
-                if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(intent.getAction())) {
-                    for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
-
-                        String messageBody = smsMessage.getMessageBody();
-                        String emailFrom = smsMessage.getEmailFrom();
-                        String address = smsMessage.getOriginatingAddress();
-                        Log.i("sms", "body: " + messageBody);
-                        Log.i("sms", "address: " + address);
-
-                        String message = "[" + address + "] " + messageBody;
-
-                        String number = context.getSharedPreferences("data", Context.MODE_PRIVATE).getString("number", "");
-                        if (number == "") {
-                            Log.i("sms", "phone number not set. ignore this one.");
-                            return;
-                        }
-                        Log.i("sms", "sending to " + number);
-
-                        Log.i("sms", "message send:" + message);
-                        SmsManager sms = SmsManager.getDefault();
-                        ArrayList<String> dividedMessages = sms.divideMessage(message);
-                        sms.sendMultipartTextMessage(number, null, dividedMessages, null, null);
-                    }
-                }
-            }
-        }
-    };
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.getAction().equals(Constants.ACTION.STARTFOREGROUND_ACTION)) {
@@ -108,14 +74,10 @@ public class ForwardSMSService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("android.provider.Telephony.SMS_RECEIVED");
-        registerReceiver(receiver, filter);
     }
 
     @Override
     public void onDestroy() {
-        unregisterReceiver(receiver);
         super.onDestroy();
     }
 
